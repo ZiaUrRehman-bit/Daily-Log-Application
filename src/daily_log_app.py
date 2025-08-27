@@ -1,12 +1,11 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, filedialog, scrolledtext
+from tkinter import ttk, messagebox, scrolledtext
 import ttkbootstrap as ttkbs
 from ttkbootstrap.constants import *
 import os
 import json
 from datetime import datetime, timedelta
 import calendar
-from PIL import Image, ImageTk
 import sys
 import subprocess
 
@@ -22,8 +21,9 @@ class DailyLogManager:
         self.current_file = None
         self.dark_mode = True
         
-        # Setup application data
-        self.app_data_dir = os.path.join(os.path.expanduser("~"), ".research_logs")
+        # Setup application data - using Documents folder for better accessibility
+        self.documents_dir = os.path.join(os.path.expanduser("~"), "Documents")
+        self.app_data_dir = os.path.join(self.documents_dir, "Research Logs")
         if not os.path.exists(self.app_data_dir):
             os.makedirs(self.app_data_dir)
             
@@ -67,12 +67,16 @@ class DailyLogManager:
         ttk.Button(format_frame, text="•", width=2, 
                   command=lambda: self.apply_format("bullet")).pack(side=LEFT, padx=2)
         
+        # Save button
+        ttk.Button(header_frame, text="Save", width=6,
+                  command=self.save_log).pack(side=RIGHT, padx=5)
+        
         # Calendar and editor panes
         paned_window = ttk.PanedWindow(main_container, orient=HORIZONTAL)
         paned_window.pack(fill=BOTH, expand=True)
         
         # Calendar frame
-        calendar_frame = ttk.Frame(paned_window, width=250, padding=5)
+        calendar_frame = ttk.Frame(paned_window, width=180, padding=3)
         paned_window.add(calendar_frame, weight=1)
         
         # Calendar navigation
@@ -127,6 +131,13 @@ class DailyLogManager:
         ttk.Label(status_frame, textvariable=self.auto_save_var,
                  font=("Helvetica", 9)).pack(side=RIGHT)
         
+        # Compact, modern calendar styles
+        try:
+            self.style.configure("CalendarHeader.TLabel", font=("Helvetica", 8, "bold"))
+            self.style.configure("Compact.TButton", padding=(4, 1), font=("Helvetica", 9))
+        except Exception:
+            pass
+        
         # Build the calendar
         self.build_calendar()
         
@@ -144,8 +155,8 @@ class DailyLogManager:
         # Create day headers
         days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
         for i, day in enumerate(days):
-            label = ttk.Label(self.cal_frame, text=day, font=("Helvetica", 9, "bold"),
-                             anchor="center", padding=2)
+            label = ttk.Label(self.cal_frame, text=day, style="CalendarHeader.TLabel",
+                             anchor="center", padding=0)
             label.grid(row=0, column=i, sticky="ew", padx=1, pady=1)
             
         # Create day buttons
@@ -158,6 +169,8 @@ class DailyLogManager:
                     self.cal_frame, 
                     text=str(day), 
                     width=2,
+                    style="Compact.TButton",
+                    bootstyle="secondary-outline",
                     command=lambda d=day: self.load_log_by_date(d)
                 )
                 
@@ -166,12 +179,12 @@ class DailyLogManager:
                 if (self.current_date.year == today.year and 
                     self.current_date.month == today.month and 
                     day == today.day):
-                    btn.configure(style="Primary.TButton")
+                    btn.configure(bootstyle="primary")
                 
                 # Check if log exists for this day
                 log_date = datetime(self.current_date.year, self.current_date.month, day)
                 if self.log_exists(log_date):
-                    btn.configure(style="Success.TButton")
+                    btn.configure(bootstyle="success-outline")
                 
                 btn.grid(row=week_idx+1, column=day_idx, sticky="nsew", padx=1, pady=1)
                 
@@ -206,7 +219,7 @@ class DailyLogManager:
         # Update date label
         self.date_label.config(text=date.strftime("%A, %d %B %Y"))
         
-        # Determine file path
+        # Determine file path - using the correct format
         month_folder = date.strftime("%B %Y")
         filename = date.strftime("%d-%m-%Y") + ".txt"
         filepath = os.path.join(self.app_data_dir, month_folder, filename)
@@ -219,7 +232,7 @@ class DailyLogManager:
             with open(filepath, 'r', encoding='utf-8') as f:
                 content = f.read()
         else:
-            content = ""
+            content = f"# Research Log - {date.strftime('%A, %d %B %Y')}\n\n"
             
         # Update text editor
         self.text_editor.delete(1.0, tk.END)
@@ -241,8 +254,12 @@ class DailyLogManager:
         os.makedirs(os.path.dirname(self.current_file), exist_ok=True)
         
         # Save to file
-        with open(self.current_file, 'w', encoding='utf-8') as f:
-            f.write(content)
+        try:
+            with open(self.current_file, 'w', encoding='utf-8') as f:
+                f.write(content)
+            self.status_var.set(f"Saved: {datetime.now().strftime('%H:%M:%S')}")
+        except Exception as e:
+            self.status_var.set(f"Error saving: {str(e)}")
             
         # Update calendar to reflect new log
         self.build_calendar()
