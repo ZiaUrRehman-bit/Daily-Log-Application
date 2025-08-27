@@ -1,7 +1,7 @@
 # Research Log Manager
 
 A Python-based desktop application for managing daily research logs with automatic file organization.
-
+![Research Log Manager Banner](application\docs\images\applicationImage.png)
 ## Features
 
 - Automatic file organization by month and date
@@ -31,4 +31,13 @@ python research_log_manager.py
 
 Logs are saved in your Documents folder under "Research Logs"
 
-image.png
+```
+Research Logs/
+├── January 2025/
+│   ├── 01-01-2025.txt
+│   └── 02-01-2025.txt
+├── February 2025/
+│   ├── 01-02-2025.txt
+│   └── 15-02-2025.txt
+└── settings.json
+```
