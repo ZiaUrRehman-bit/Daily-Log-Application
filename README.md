@@ -30,3 +30,5 @@ python research_log_manager.py
 ## File Structure
 
 Logs are saved in your Documents folder under "Research Logs"
+
+{1C9EA510-86CD-4302-883E-C898B788E205}.png
