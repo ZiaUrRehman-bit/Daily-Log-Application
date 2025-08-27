@@ -96,7 +96,20 @@ class DailyLogManager:
         
         # Calendar display
         self.cal_frame = ttk.Frame(calendar_frame)
+          # Left pane split vertically: calendar on top, reserved area below
+        left_split = ttk.PanedWindow(calendar_frame, orient=VERTICAL)
+        left_split.pack(fill=BOTH, expand=True)
+
+        top_half = ttk.Frame(left_split)
+        bottom_half = ttk.Frame(left_split)
+        left_split.add(top_half, weight=1)
+        left_split.add(bottom_half, weight=1)
+
+        # Calendar display (upper part)
+        self.cal_frame = ttk.Frame(top_half)
         self.cal_frame.pack(fill=BOTH, expand=True)
+        # Reserved lower area (kept empty for now)
+        self.left_lower_frame = bottom_half
         
         # Editor frame
         editor_frame = ttk.Frame(paned_window, padding=5)
