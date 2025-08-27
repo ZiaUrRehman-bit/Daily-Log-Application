@@ -1,7 +1,7 @@
 # Research Log Manager
 
 A Python-based desktop application for managing daily research logs with automatic file organization.
-![Research Log Manager Banner](application/docs/images/applicationImage.png)
+![Research Log Manager Banner](/docs/images/applicationImage.png)
 ## Features
 
 - Automatic file organization by month and date
