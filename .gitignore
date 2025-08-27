@@ -1,0 +1,84 @@
+# .gitignore for Research Log Manager
+
+# Log files and user data
+Research Logs/
+*.log
+logs/
+
+# Python compiled files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+pip-wheel-metadata/
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.venv
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Executable files
+*.exe
+*.msi
+
+# PyInstaller
+build/
+dist/
+
+# macOS
+*.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+[Tt]humbs.db
+[Dd]esktop.ini
+
+# Specific to our application
+settings.json
+user_preferences.json
